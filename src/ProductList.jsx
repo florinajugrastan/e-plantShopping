@@ -264,6 +264,17 @@ function ProductList({ onHomeClick }) {
             ...prevState, // Spread the previous state to retain existing entries
             [plant.name]: true, // Set the current product's name as a key with value 'true' to mark it as added
         }));
+        console.log("Starea addedToCart:", addedToCart);
+        console.log("Numele plantei curente:", plant.name);
+    };
+
+    const handleRemoveFromCart = (plant) => {
+        setAddedToCart((prevState) => ({
+            ...prevState,        // Păstrează starea celorlalte produse neschimbată
+            [plant.name]: false, // Setează planta curentă ca fiind 'false' (neadăugată)
+        }));
+        console.log("Starea addedToCart:", addedToCart);
+        console.log("Numele plantei curente:", plant.name);
     };
 
     const calculateTotalQuantity = () => {
@@ -312,7 +323,11 @@ function ProductList({ onHomeClick }) {
                                         <img className="product-image" src={plant.image}></img>
                                         <div>{plant.description}</div>
                                         <div className="product-price">{plant.cost}</div>
-                                        <button className="product-button" onClick={() => handleAddToCart(plant)}>
+                                        <button
+                                            className={`product-button ${addedToCart[plant.name] ? 'addedToCart' : ''}`}
+                                            onClick={() => handleAddToCart(plant)}
+                                            disabled={addedToCart[plant.name]}
+                                        >
                                             {addedToCart[plant.name] ? 'Added to Cart' : 'Add to Cart'}
                                         </button>
                                     </div>
@@ -322,7 +337,10 @@ function ProductList({ onHomeClick }) {
                     ))}
                 </div>
             ) : (
-                <CartItem onContinueShopping={handleContinueShopping} />
+                <CartItem
+                    onContinueShopping={handleContinueShopping}
+                    onRemoveFromCart={handleRemoveFromCart}
+                />
             )}
         </div>
     );
